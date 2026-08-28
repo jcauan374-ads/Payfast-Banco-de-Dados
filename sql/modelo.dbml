@@ -1,0 +1,63 @@
+Table usuarios {
+  id_usuario     integer       [primary key, increment, note: 'identificador único, gerado automaticamente']
+  cpf            char(11)      [not null, unique, note: 'sempre 11 dígitos numéricos']
+  nome           varchar(120)  [not null]
+  email          varchar(120)  [not null, unique]
+  senha_hash     varchar(255)  [not null, note: 'hash da senha']
+  data_cadastro  timestamp     [not null, default: `CURRENT_TIMESTAMP`]
+}
+
+Table contas {
+  id_conta       integer        [primary key, increment]
+  id_usuario     integer        [not null]
+  numero_conta   varchar(20)    [not null, unique]
+  agencia        varchar(10)    [not null]
+  tipo_conta     varchar(20)    [not null, default: 'CORRENTE']
+  saldo          decimal(14,2)  [not null, default: 0.00]
+  data_abertura  timestamp      [not null, default: `CURRENT_TIMESTAMP`]
+}
+
+Table chaves_pix {
+  id_chave      integer       [primary key, increment]
+  id_conta      integer       [not null]
+  tipo_chave    varchar(20)   [not null]
+  valor_chave   varchar(140)  [not null, unique]
+  status        varchar(15)   [not null, default: 'ATIVA']
+  data_criacao  timestamp     [not null, default: `CURRENT_TIMESTAMP`]
+}
+
+Table transacoes {
+  id_transacao      integer       [primary key, increment]
+  id_conta_origem   integer       [not null]
+  id_conta_destino  integer       [not null]
+  id_chave_pix      integer
+  valor             decimal(14,2) [not null]
+  tipo_transacao    varchar(20)   [not null, default: 'PIX']
+  status            varchar(15)   [not null, default: 'PENDENTE']
+  data_hora         timestamp     [not null, default: `CURRENT_TIMESTAMP`]
+}
+
+Table liquidacoes {
+  id_liquidacao        integer       [primary key, increment]
+  id_transacao         integer       [not null, unique]
+  codigo_autenticacao  varchar(60)   [not null, unique]
+  canal_liquidacao     varchar(20)   [not null, default: 'SPI']
+  status_liquidacao    varchar(15)   [not null, default: 'PROCESSANDO']
+  data_liquidacao      timestamp
+}
+
+Table limites_transacao {
+  id_limite            integer        [primary key, increment]
+  id_conta             integer        [not null, unique]
+  valor_limite_diario  decimal(14,2)  [not null, default: 5000.00]
+  valor_utilizado_dia  decimal(14,2)  [not null, default: 0.00]
+  data_referencia      date           [not null, default: `CURRENT_DATE`]
+}
+
+Ref: contas.id_usuario > usuarios.id_usuario
+Ref: chaves_pix.id_conta > contas.id_conta
+Ref: transacoes.id_conta_origem > contas.id_conta
+Ref: transacoes.id_conta_destino > contas.id_conta
+Ref: transacoes.id_chave_pix > chaves_pix.id_chave
+Ref: liquidacoes.id_transacao - transacoes.id_transacao
+Ref: limites_transacao.id_conta - contas.id_conta
