@@ -15,6 +15,14 @@
 
 </div>
 
+## 🌐 Dashboard visual
+
+Para tornar o projeto mais fácil de apresentar em entrevistas, portfólio e avaliações, foi criada uma versão web demonstrativa do PayFast:
+
+**[Abrir o PayFast Data Lab no GitHub Pages ↗](https://jcauan374-ads.github.io/Payfast-Banco-de-Dados/)**
+
+O dashboard apresenta os indicadores dos dados fictícios do `schema.sql`, transações filtráveis, a arquitetura das seis tabelas e uma explicação visual da normalização até a 3FN. Ele é uma camada de visualização estática e não realiza operações financeiras reais.
+
 ---
 
 ## 🧭 Visão geral
@@ -113,6 +121,10 @@ Com isso, o projeto reduz redundâncias e evita situações como alterar o nome 
 ```text
 payfast-banco-de-dados/
 ├── README.md
+├── docs/
+│   ├── index.html
+│   ├── styles.css
+│   └── app.js
 ├── documentacao/
 │   └── ProjetoBancodeDadosParcial1.0.docx
 └── sql/
